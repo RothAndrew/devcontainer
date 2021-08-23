@@ -1,0 +1,32 @@
+ARG UBI_VERSION=latest
+FROM registry1.dso.mil/ironbank/redhat/ubi/ubi8:${UBI_VERSION}
+SHELL [ "/bin/bash", "-euxo", "pipefail", "-c" ]
+WORKDIR /
+# Need root to do rooty things
+USER root
+RUN dnf install -y --refresh \
+  bind-utils \
+  bzip2 \
+  bzip2-devel \
+  container-selinux \
+  gcc \
+  gcc-c++ \
+  gettext \
+  git \
+  jq \
+  iptables \
+  libffi-devel \
+  libxslt-devel \
+  make \
+  ncurses-devel \
+  openssl-devel \
+  perl-Digest-SHA \
+  sqlite-devel \
+  unixODBC-devel \
+  unzip \
+  wget \
+  which \
+  xz \
+  && dnf clean all \
+  && rm -rf /var/cache/yum/ \
+  && rm -rf /var/tmp/* /tmp/* /var/tmp/.???* /tmp/.???*

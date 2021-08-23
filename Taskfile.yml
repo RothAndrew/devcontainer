@@ -1,0 +1,30 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  docker:login:
+    vars:
+      REGISTRY1_USERNAME: '{{ coalesce .REGISTRY1_USERNAME "<no value>" }}'
+      REGISTRY1_PASSWORD: '{{ coalesce .REGISTRY1_PASSWORD "<no value>" }}'
+    preconditions:
+      - sh: test "{{.REGISTRY1_USERNAME}}" != "<no value>"
+        msg: Required variable 'REGISTRY1_USERNAME' not set
+      - sh: test "{{.REGISTRY1_PASSWORD}}" != "<no value>"
+        msg: Required variable 'REGISTRY1_PASSWORD' not set
+    cmds:
+      - docker login registry1.dso.mil -u {{.REGISTRY1_USERNAME}} -p {{.REGISTRY1_PASSWORD}}
+    silent: true
+  docker:build:
+    vars:
+      OS: '{{ coalesce .OS "<no value>" }}'
+    preconditions:
+      - sh: test "{{.OS}}" != "<no value>"
+        msg: Required variable 'OS' not set
+    cmds:
+      - docker build -f "os/{{.OS}}/Dockerfile.{{.OS}}" "os/{{.OS}}"
+
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
